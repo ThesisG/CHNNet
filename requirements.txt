@@ -1,0 +1,6 @@
+tensorflow==2.10.0
+tensorflow-datasets==1.2.0
+keras==2.10.0
+matplotlib==3.7.1
+pandas==1.5.3
+scikit-learn==1.2.1
