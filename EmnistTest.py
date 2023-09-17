@@ -57,12 +57,12 @@ chn_result_loss = []
 # declare hyperparameters
 epoch = 7
 batchSize = 32
-MLP_h1 = 320
-MLP_h2 = 320
-MLP_h3 = 320
-MLP_h4 = 320
-MLP_h5 = 320
-MLP_h6 = 320
+MLP_h1 = 412
+MLP_h2 = 412
+MLP_h3 = 412
+MLP_h4 = 412
+MLP_h5 = 412
+MLP_h6 = 412
 
 
 CHN_h1 = 320
@@ -227,7 +227,7 @@ print("p-value_accuracy:", p_value_accuracy)
 for seed in range(num_seeds):
     plt.plot(mlp_loss_history[seed], label='Training Loss')
     plt.plot(chn_loss_history[seed], label='Training Loss')
-    plt.title("EMNIST loss: Architecture 2")
+    plt.title("EMNIST loss: Architecture 5")
     plt.xlabel("Epoch")
     plt.ylabel("Loss")
     plt.legend([f"FF"] + [f"CHN"])

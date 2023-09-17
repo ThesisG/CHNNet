@@ -28,14 +28,27 @@ y_test = y_test.astype("float32")
 
 
 # declare hyperparameters
-epoch = 10
+epoch = 20
 batchSize = 32
-MLP_h1 = 256
-MLP_h2 = 256
-MLP_h3 = 256
-CHN_h1 = 256
-CHN_h2 = 256
-CHN_h3 = 256
+
+MLP_h1 = 928
+MLP_h2 = 800
+MLP_h3 = 672
+MLP_h4 = 544
+MLP_h5 = 416
+MLP_h6 = 288
+MLP_h7 = 160
+MLP_h8 = 32
+
+CHN_h1 = 928
+CHN_h2 = 800
+CHN_h3 = 672
+CHN_h4 = 544
+CHN_h5 = 416
+CHN_h6 = 288
+CHN_h7 = 160
+CHN_h8 = 32
+
 optimizer = SGD(lr=0.001, momentum=0.9)
 loss = SparseCategoricalCrossentropy(from_logits=True)
 
@@ -49,12 +62,13 @@ def create_model_mlp():
     MLP_model = Sequential([
     Flatten(input_shape=(28, 28)),
     Dense(MLP_h1, activation='relu'),
-    # Dense(MLP_h2, activation="relu"),
-    # Dense(MLP_h3, activation="relu"),
-    # Dense(MLP_h4, activation="relu"),
-    # # Dense(MLP_h5, activation="relu"),
-    # # Dense(MLP_h6, activation="relu"),
-
+    Dense(MLP_h2, activation="relu"),
+    Dense(MLP_h3, activation="relu"),
+    Dense(MLP_h4, activation="relu"),
+    Dense(MLP_h5, activation="relu"),
+    Dense(MLP_h6, activation="relu"),
+    Dense(MLP_h7, activation='relu'),
+    Dense(MLP_h8, activation='relu'),
     Dense(10, activation='softmax')
     ])
 
@@ -73,11 +87,13 @@ def create_model_CHNNet():
     CHN_model = Sequential([
     Flatten(input_shape=(28, 28)),   
     CHNLayer(CHN_h1, activation='relu'),
-    # CHNLayer(CHN_h2, activation="relu"),
-    # CHNLayer(CHN_h3, activation="relu"),
-    # CHNLayer(CHN_h4, activation="relu"),
-    # # CHNLayer(CHN_h5, activation="relu"),
-    # # CHNLayer(CHN_h6, activation="relu"),
+    CHNLayer(CHN_h2, activation="relu"),
+    CHNLayer(CHN_h3, activation="relu"),
+    CHNLayer(CHN_h4, activation="relu"),
+    CHNLayer(CHN_h5, activation="relu"),
+    CHNLayer(CHN_h6, activation="relu"),
+    CHNLayer(CHN_h7, activation='relu'),
+    CHNLayer(CHN_h8, activation='relu'),    
     Dense(10, activation='softmax')
     ])
 
@@ -186,7 +202,7 @@ print("p-value_accuracy:", p_value_accuracy)
 for seed in range(num_seeds):
     plt.plot(mlp_loss_history[seed], label='Training Loss')
     plt.plot(chn_loss_history[seed], label='Training Loss')
-    plt.title("MNIST loss: Architecture 1")
+    plt.title("FMNIST loss: Architecture 3")
     plt.xlabel("Epoch")
     plt.ylabel("Loss")
     plt.legend([f"FF"] + [f"CHN"])
