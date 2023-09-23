@@ -27,6 +27,7 @@ y_test = y_test.astype("float32")
 epoch = 10
 batchSize = 512
 
+
 MLP_h1 = 360
 MLP_h2 = 334
 MLP_h3 = 304
@@ -45,6 +46,12 @@ CHN_h5 = 160
 CHN_h6 = 128
 CHN_h7 = 96
 CHN_h8 = 64
+
+
+
+
+
+
 
 optimizer = RMSprop(learning_rate=0.0001)
 loss = SparseCategoricalCrossentropy(from_logits=True)
@@ -198,12 +205,13 @@ print("t-statistic_accuracy:", t_statistic_accuracy)
 print("p-value_accuracy:", p_value_accuracy)
 
 
+arch = 6
 for seed in range(num_seeds):
     plt.plot(mlp_loss_history[seed], label='Training Loss')
     plt.plot(chn_loss_history[seed], label='Training Loss')
-    plt.title("MNIST loss: Architecture 6")
+    plt.title(f"MNIST loss: Architecture {arch}")
     plt.xlabel("Epoch")
     plt.ylabel("Loss")
-    plt.legend([f"FF"] + [f"CHN"])
-    plt.savefig(f"CHN_MLP_Loss_MNIST_{seed + 1}.pdf")
+    plt.legend([f"FNN"] + [f"CHN"])
+    plt.savefig(f"CHN_MLP_Loss_MNIST_{seed + 1}_arch_{arch}.pdf")
     plt.show()

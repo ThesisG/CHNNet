@@ -33,15 +33,21 @@ chn_loss_history = []
 epoch = 50
 batchSize = 128
 
-MLP_h1 = 220
-MLP_h2 = 198
-MLP_h3 = 156
-MLP_h4 = 124
+MLP_h1 = 160
+MLP_h2 = 128
+MLP_h3 = 96
+MLP_h4 = 64
 
 CHN_h1 = 160
 CHN_h2 = 128
 CHN_h3 = 96
 CHN_h4 = 64
+
+
+
+
+
+
 
 
 optimizer = RMSprop(learning_rate=0.0002)
@@ -54,6 +60,8 @@ def create_model_mlp():
     Dense(MLP_h2, activation="relu"),
     Dense(MLP_h3, activation="relu"),
     Dense(MLP_h4, activation="relu"),
+    # Dense(MLP_h5, activation="relu"),
+    # Dense(MLP_h6, activation="relu"),
 
     Dense(1, activation="linear")
     ])
@@ -72,6 +80,9 @@ def create_model_CHNNet():
     CHNLayer(CHN_h2, activation="relu"),
     CHNLayer(CHN_h3, activation="relu"),
     CHNLayer(CHN_h4, activation="relu"),
+    # CHNLayer(CHN_h5, activation="relu"),
+    # CHNLayer(CHN_h6, activation="relu"),
+
     Dense(1, activation="linear"),
     ])
 
@@ -146,13 +157,13 @@ t_statistic_loss, p_value_loss = ttest_rel(mlp_result, chn_result)
 print("t-statistic:", t_statistic_loss)
 print("p-value:", p_value_loss)
 
-
+arch = 3
 for seed in range(num_seeds):
     plt.plot(mlp_loss_history[seed], label='Training Loss')
     plt.plot(chn_loss_history[seed], label='Training Loss')
-    plt.title("Boston loss: Architecture 6")
+    plt.title(f"Boston loss: Architecture {arch}")
     plt.xlabel("Epoch")
     plt.ylabel("Loss")
-    plt.legend([f"FF"] + [f"CHN"])
-    plt.savefig(f"CHN_MLP_Loss_Boston_{seed + 1}.pdf")
+    plt.legend([f"FNN"] + [f"CHN"])
+    plt.savefig(f"CHN_MLP_Loss_Boston_{seed + 1}_arch_{arch}.pdf")
     plt.show()

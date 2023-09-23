@@ -145,7 +145,7 @@ class CHNLayer(Layer):
                 # summed over and does not matter. See the documentation for
                 # sparse_ops.sparse_tensor_dense_matmul a more detailed
                 # explanation of the inputs to both ops.
-                
+
                 # calculate activation of hidden neurons
                 inputIds = tf.SparseTensor(
                     indices=inputs.indices,
@@ -161,8 +161,8 @@ class CHNLayer(Layer):
                 if self.use_bias:
                     hiddenAct = tf.nn.bias_add(hiddenAct, self.bias)
 
-                if self.activation is not None:
-                    hiddenAct = self.activation(hiddenAct)
+                # if self.activation is not None:
+                #     hiddenAct = self.activation(hiddenAct)
 
                 # calculate activation of the layer
                 hiddenIds = tf.SparseTensor(
@@ -180,12 +180,10 @@ class CHNLayer(Layer):
                 # calculate activation of hidden neurons
                 kernelCopy = tf.identity(self.kernelInp)
                 hiddenAct = tf.matmul(a=inputs, b=kernelCopy)
-
                 if self.use_bias:
                     hiddenAct = tf.nn.bias_add(hiddenAct, self.bias)
-
-                if self.activation is not None:
-                    hiddenAct = self.activation(hiddenAct)
+                # if self.activation is not None:
+                #     hiddenAct = self.activation(hiddenAct)
                 # calculate activation of the layer
                 outputs = tf.matmul(a=inputs, b=self.kernelInp) + tf.matmul(a=hiddenAct, b=self.kernelHid)
         # Broadcast kernel to inputs.
@@ -193,13 +191,10 @@ class CHNLayer(Layer):
             # calculate activation of hidden neurons
             kernelCopy = tf.identity(self.kernelInp)
             hiddenAct = tf.tensordot(inputs, kernelCopy, [[rank - 1], [0]])
-
             if self.use_bias:
                 hiddenAct = tf.nn.bias_add(hiddenAct, self.bias)
-
-            if self.activation is not None:
-                hiddenAct = self.activation(hiddenAct)
-
+            # if self.activation is not None:
+            #     hiddenAct = self.activation(hiddenAct)
             # calculate activation of the layer
             outputs = tf.tensordot(inputs, self.kernel, [[rank - 1], [0]]) + tf.tensordot(hiddenAct, self.kernelHid, [[rank - 1], [0]])
 
