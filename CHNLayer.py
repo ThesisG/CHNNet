@@ -153,9 +153,9 @@ class CHNLayer(Layer):
                     dense_shape=inputs.dense_shape,
                 )
                 inputWeights = inputs
-                kernelCopy = tf.identity(self.kernelInp)
+                # kernelCopy = tf.identity(self.kernelInp)
                 hiddenAct = tf.nn.embedding_lookup_sparse(
-                    kernelCopy, inputIds, inputWeights, combiner="sum"
+                    self.kernelInp, inputIds, inputWeights, combiner="sum"
                 )
 
                 if self.use_bias:
@@ -171,33 +171,38 @@ class CHNLayer(Layer):
                     dense_shape=hiddenAct.dense_shape,
                 )
                 hiddenWeights = hiddenAct
-                outputs = tf.nn.embedding_lookup_sparse(
-                    self.kernelInp, inputIds, inputWeights, combiner="sum"
-                ) + tf.nn.embedding_lookup_sparse(
+                # outputs = tf.nn.embedding_lookup_sparse(
+                #     self.kernelInp, inputIds, inputWeights, combiner="sum"
+                # ) + tf.nn.embedding_lookup_sparse(
+                #     self.kernelHid, hiddenIds, hiddenWeights, combiner="sum"
+                # )
+
+                outputs = hiddenAct + tf.nn.embedding_lookup_sparse(
                     self.kernelHid, hiddenIds, hiddenWeights, combiner="sum"
                 )
             else:
                 # calculate activation of hidden neurons
-                kernelCopy = tf.identity(self.kernelInp)
-                hiddenAct = tf.matmul(a=inputs, b=kernelCopy)
+                # kernelCopy = tf.identity(self.kernelInp)
+                hiddenAct = tf.matmul(a=inputs, b=self.kernelInp)
                 if self.use_bias:
                     hiddenAct = tf.nn.bias_add(hiddenAct, self.bias)
                 # if self.activation is not None:
                 #     hiddenAct = self.activation(hiddenAct)
                 # calculate activation of the layer
-                outputs = tf.matmul(a=inputs, b=self.kernelInp) + tf.matmul(a=hiddenAct, b=self.kernelHid)
+                # outputs = tf.matmul(a=inputs, b=self.kernelInp) + tf.matmul(a=hiddenAct, b=self.kernelHid)
+                outputs = hiddenAct + tf.matmul(a=hiddenAct, b=self.kernelHid)
         # Broadcast kernel to inputs.
         else:
             # calculate activation of hidden neurons
-            kernelCopy = tf.identity(self.kernelInp)
-            hiddenAct = tf.tensordot(inputs, kernelCopy, [[rank - 1], [0]])
+            # kernelCopy = tf.identity(self.kernelInp)
+            hiddenAct = tf.tensordot(inputs, self.kernelInp, [[rank - 1], [0]])
             if self.use_bias:
                 hiddenAct = tf.nn.bias_add(hiddenAct, self.bias)
             # if self.activation is not None:
             #     hiddenAct = self.activation(hiddenAct)
             # calculate activation of the layer
-            outputs = tf.tensordot(inputs, self.kernel, [[rank - 1], [0]]) + tf.tensordot(hiddenAct, self.kernelHid, [[rank - 1], [0]])
-
+            # outputs = tf.tensordot(inputs, self.kernel, [[rank - 1], [0]]) + tf.tensordot(hiddenAct, self.kernelHid, [[rank - 1], [0]])
+            outputs = hiddenAct + tf.tensordot(hiddenAct, self.kernelHid, [[rank - 1], [0]])
             # Reshape the output back to the original ndim of the input.
             if not tf.executing_eagerly():
                 shape = inputs.shape.as_list()
